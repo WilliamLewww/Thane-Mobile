@@ -1,6 +1,7 @@
 package com.williamlewww.thane.TEngine;
 
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -11,8 +12,12 @@ import java.nio.ShortBuffer;
 
 public class TRectangle {
 
-    public Point position;
+    public PointF position;
     public int width, height;
+
+    public float angle = 0;
+
+    private boolean rotation;
 
     private final int mProgram;
 
@@ -34,10 +39,12 @@ public class TRectangle {
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
-    public TRectangle(Point position, int width, int height) {
+    public TRectangle(PointF position, int width, int height, boolean rotation) {
         this.position = position;
         this.width = width;
         this.height = height;
+
+        this.rotation = rotation;
 
         for (int x = 0; x < rectangleCoords.length; x += 3) {
             rectangleCoords[x] *= width / 2;
@@ -82,6 +89,10 @@ public class TRectangle {
 
         matrix = mvpMatrix.clone();
         Matrix.translateM(matrix,0, -position.x, -position.y, 0);
+        if (rotation) {
+            Matrix.rotateM(matrix, 0, angle, 0, 0, 1);
+            Matrix.translateM(matrix,0, width / 2, height / 2, 0);
+        }
 
         mPositionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition");
         GLES20.glEnableVertexAttribArray(mPositionHandle);
