@@ -29,8 +29,8 @@ public class Board {
     }
 
     private void moveInDirection(PointF direction) {
-        rectangle.position.x += direction.x * 2;
-        rectangle.position.y += direction.y * 2;
+        rectangle.position.x += direction.x * 2.5f;
+        rectangle.position.y += direction.y * 2.5f;
     }
 
     public void draw(float[] mvpMatrix) {
