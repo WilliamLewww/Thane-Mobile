@@ -1,6 +1,5 @@
 package com.williamlewww.thane.TEngine;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 import android.opengl.GLES20;
 import android.opengl.Matrix;

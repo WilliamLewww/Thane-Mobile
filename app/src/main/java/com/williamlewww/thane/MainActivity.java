@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
 
     TSurface tSurface;
 
+    float initialY, initialX;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,10 +30,46 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (event.getY() <= tSurface.getHeight() / 2) { action_state = 1; }
-            if (event.getY() > tSurface.getHeight() / 2) { action_state = 2; }
+            if (event.getY() < tSurface.getHeight() / 2) { action_state = -1; }
+            if (event.getY() > tSurface.getHeight() / 2) { action_state = 1; }
+
+            initialX = event.getX();
+            initialY = event.getY();
         }
-        if (event.getAction() == MotionEvent.ACTION_UP) { action_state = -1; }
+
+        if (event.getAction() == MotionEvent.ACTION_MOVE) {
+            if (action_state < 0) {
+                if (initialY - event.getY() > 50) {
+                    if (event.getX() - initialX > 50) {
+                        action_state = -3;
+                    }else {
+                        if (initialX - event.getX() > 50) {
+                            action_state = -2;
+                        }
+                        else {
+                            action_state = -4;
+                        }
+                    }
+                }
+            }
+
+            if (action_state > 0) {
+                if (event.getY() - initialY > 50) {
+                    if (event.getX() - initialX > 50) {
+                        action_state = 3;
+                    }else {
+                        if (initialX - event.getX() > 50) {
+                            action_state = 2;
+                        }
+                        else {
+                            action_state = 4;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (event.getAction() == MotionEvent.ACTION_UP) { action_state = 0; }
 
         return super.onTouchEvent(event);
     }

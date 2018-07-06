@@ -1,17 +1,20 @@
 package com.williamlewww.thane.TEngine;
 
+import android.graphics.PointF;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
+import android.os.Trace;
 
 import com.williamlewww.thane.TMain.Board;
+import com.williamlewww.thane.TMain.Track;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class TRenderer implements GLSurfaceView.Renderer {
-
     Board board;
+    Track track;
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
@@ -33,6 +36,8 @@ public class TRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         board = new Board();
+        track = new Track();
+        track.initialize();
 
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     }
@@ -66,9 +71,10 @@ public class TRenderer implements GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        Matrix.translateM(mViewMatrix, 0, (screenWidth / 2), (screenHeight / 2), 0);
+        Matrix.translateM(mViewMatrix, 0, board.rectangle.position.x, board.rectangle.position.y, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
         board.draw(mMVPMatrix);
+        track.draw(mMVPMatrix);
     }
 }
