@@ -1,5 +1,6 @@
 package com.williamlewww.thane.TEngine;
 
+import android.graphics.PointF;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
@@ -8,7 +9,7 @@ import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TLine {
+public class TPoint {
     private FloatBuffer VertexBuffer;
 
     private final String vertexShaderCode = "uniform mat4 uMVPMatrix;" + "attribute vec4 vPosition;" + "void main() {" + "  gl_Position = uMVPMatrix * vPosition;" + "}";
@@ -25,16 +26,54 @@ public class TLine {
     int VertexStride;
     List<Float> lineCoords;
 
-    float color[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+    float color[] = { 0.94f, 0.85f, 0.85f, 1.0f };
 
-    public TLine() {
+    public TPoint() {
         lineCoords = new ArrayList<>();
     }
 
     public void addPoint(float x, float y) {
-        lineCoords.add(x);
-        lineCoords.add(y);
+        lineCoords.add(-x);
+        lineCoords.add(-y);
         lineCoords.add(0.0f);
+
+        VertexCount = lineCoords.size() / COORDS_PER_VERTEX;
+        VertexStride = COORDS_PER_VERTEX * 4;
+
+        ByteBuffer bb = ByteBuffer.allocateDirect(lineCoords.size() * 4);
+        bb.order(ByteOrder.nativeOrder());
+
+        VertexBuffer = bb.asFloatBuffer();
+
+        float[] coordsArray = new float[lineCoords.size()];
+        for (int z = 0; z < lineCoords.size(); z++) {
+            coordsArray[z] = lineCoords.get(z);
+        }
+
+        VertexBuffer.put(coordsArray);
+        VertexBuffer.position(0);
+    }
+
+    public void addPoint(PointF point) {
+        lineCoords.add(-point.x);
+        lineCoords.add(-point.y);
+        lineCoords.add(0.0f);
+
+        VertexCount = lineCoords.size() / COORDS_PER_VERTEX;
+        VertexStride = COORDS_PER_VERTEX * 4;
+
+        ByteBuffer bb = ByteBuffer.allocateDirect(lineCoords.size() * 4);
+        bb.order(ByteOrder.nativeOrder());
+
+        VertexBuffer = bb.asFloatBuffer();
+
+        float[] coordsArray = new float[lineCoords.size()];
+        for (int z = 0; z < lineCoords.size(); z++) {
+            coordsArray[z] = lineCoords.get(z);
+        }
+
+        VertexBuffer.put(coordsArray);
+        VertexBuffer.position(0);
     }
 
     public void initialize() {
@@ -48,14 +87,6 @@ public class TLine {
 
         int vertexShader = TRenderer.loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = TRenderer.loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
-
-        float[] coordsArray = new float[lineCoords.size()];
-        for (int z = 0; z < lineCoords.size(); z++) {
-            coordsArray[z] = lineCoords.get(z);
-        }
-
-        VertexBuffer.put(coordsArray);
-        VertexBuffer.position(0);
 
         GlProgram = GLES20.glCreateProgram();
         GLES20.glAttachShader(GlProgram, vertexShader);
@@ -79,7 +110,7 @@ public class TLine {
 
         GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, mvpMatrix, 0);
 
-        GLES20.glDrawArrays(GLES20.GL_LINE_STRIP, 0, VertexCount);
+        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, VertexCount);
 
         GLES20.glDisableVertexAttribArray(PositionHandle);
     }

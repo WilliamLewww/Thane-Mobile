@@ -38,6 +38,26 @@ public class TRectangle {
     private short drawOrder[] = { 0, 1, 2, 0, 2, 3 };
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 1.0f };
 
+    public PointF getTopLeft() {
+        return new PointF((float)((-width / 2) * Math.cos((-angle * Math.PI) / 180) - (height / 2) * Math.sin((-angle * Math.PI) / 180) + position.x),
+                (float)((width / 2) * Math.sin((-angle * Math.PI) / 180) - (height / 2) * Math.cos((-angle * Math.PI) / 180) + position.y));
+    }
+
+    public PointF getTopRight() {
+        return new PointF((float)((width / 2) * Math.cos((-angle * Math.PI) / 180) - (height / 2) * Math.sin((-angle * Math.PI) / 180) + position.x),
+                (float)((-width / 2) * Math.sin((-angle * Math.PI) / 180) - (height / 2) * Math.cos((-angle * Math.PI) / 180) + position.y));
+    }
+
+    public PointF getBottomLeft() {
+        return new PointF((float)((-width / 2) * Math.cos((-angle * Math.PI) / 180) - (-height / 2) * Math.sin((-angle * Math.PI) / 180) + position.x),
+                (float)((width / 2) * Math.sin((-angle * Math.PI) / 180) - (-height / 2) * Math.cos((-angle * Math.PI) / 180) + position.y));
+    }
+
+    public PointF getBottomRight() {
+        return new PointF((float)((width / 2) * Math.cos((-angle * Math.PI) / 180) - (-height / 2) * Math.sin((-angle * Math.PI) / 180) + position.x),
+                (float)((-width / 2) * Math.sin((-angle * Math.PI) / 180) - (-height / 2) * Math.cos((-angle * Math.PI) / 180) + position.y));
+    }
+
     public TRectangle(PointF position, int width, int height, boolean rotation) {
         this.position = position;
         this.width = width;

@@ -3,17 +3,20 @@ package com.williamlewww.thane.TMain;
 import android.graphics.PointF;
 
 import com.williamlewww.thane.MainActivity;
+import com.williamlewww.thane.TEngine.TPoint;
 import com.williamlewww.thane.TEngine.TRectangle;
 
 public class Board {
     public TRectangle rectangle;
+
+    TPoint thaneLines;
 
     float velocity;
     float rollSpeed = 0.02f;
 
     double pushInterval = 0.7, pushSpeed = 35, pushTimer = 0, pushMax = 150;
     double tuckSpeed = 8;
-    double turnSpeed = 1;
+    double turnSpeed = 1.12;
 
     boolean slide = false, shutdownSlide = false;
     boolean turnLeft = false, turnRight = false;
@@ -23,12 +26,14 @@ public class Board {
 
     public Board() {
         rectangle = new TRectangle(new PointF(0,0),100,50, true);
-        rectangle.angle = 90;
-        movementAngle = 90;
+        rectangle.angle = 270;
+        movementAngle = 270;
+
+        thaneLines = new TPoint();
+        thaneLines.initialize();
     }
 
     public void update(float deltaTimeS) {
-
         velocity += rollSpeed;
 
         handleLeftTurn();
@@ -51,7 +56,7 @@ public class Board {
                 slide = true;
 
                 rectangle.angle -= turnSpeed * 3;
-                movementAngle -= turnSpeed;
+                movementAngle -= turnSpeed * 0.75;
             }
             else {
                 if (MainActivity.action_state == 2) {
@@ -59,11 +64,11 @@ public class Board {
 
                     if (shutdownSlide == true) {
                         rectangle.angle -= turnSpeed * 5;
-                        movementAngle -= turnSpeed / 3;
+                        movementAngle -= turnSpeed * 0.25;
                     }
                     else {
                         rectangle.angle -= turnSpeed * 6;
-                        movementAngle -= turnSpeed / 3;
+                        movementAngle -= turnSpeed * 0.25;
                     }
                 }
                 else {
@@ -95,7 +100,7 @@ public class Board {
                 slide = true;
 
                 rectangle.angle += turnSpeed * 3;
-                movementAngle += turnSpeed;
+                movementAngle += turnSpeed * 0.75;
             }
             else {
                 if (MainActivity.action_state == -2) {
@@ -103,11 +108,11 @@ public class Board {
 
                     if (shutdownSlide == true) {
                         rectangle.angle += turnSpeed * 5;
-                        movementAngle += turnSpeed / 3;
+                        movementAngle += turnSpeed * 0.25;
                     }
                     else {
                         rectangle.angle += turnSpeed * 6;
-                        movementAngle += turnSpeed / 3;
+                        movementAngle += turnSpeed * 0.25;
                     }
                 }
                 else {
@@ -131,8 +136,8 @@ public class Board {
     }
 
     private double getAngleDifference() {
-        if (shutdownSlide) { return Math.abs(rectangle.angle - movementAngle) * 3; }
-        else { return Math.abs(rectangle.angle - movementAngle) * 1.5; }
+        if (shutdownSlide) { return Math.abs(rectangle.angle - movementAngle) * 1.5; }
+        else { return Math.abs(rectangle.angle - movementAngle) * 0.5; }
     }
 
     private void handleSlideLeft(double difference) {
@@ -152,8 +157,8 @@ public class Board {
                     velocity -= (difference / 500);
                 }
 
-//                if (shutdownSlide) { generateThane(255); }
-//                else { generateThane(100); }
+                if (shutdownSlide) { generateThane(255); }
+                else { generateThane(100); }
             }
             else {
                 shutdownSlide = false;
@@ -184,8 +189,8 @@ public class Board {
                     velocity -= (difference / 500);
                 }
 
-//                if (shutdownSlide) { generateThane(255); }
-//                else { generateThane(100); }
+                if (shutdownSlide) { generateThane(255); }
+                else { generateThane(100); }
             }
             else {
                 shutdownSlide = false;
@@ -198,6 +203,13 @@ public class Board {
                 flipped = !flipped;
             }
         }
+    }
+
+    private void generateThane(int alpha) {
+        thaneLines.addPoint(rectangle.getTopLeft());
+        thaneLines.addPoint(rectangle.getTopRight());
+        thaneLines.addPoint(rectangle.getBottomRight());
+        thaneLines.addPoint(rectangle.getBottomLeft());
     }
 
     private PointF getDirection() {
@@ -222,5 +234,6 @@ public class Board {
 
     public void draw(float[] mvpMatrix) {
         rectangle.draw(mvpMatrix);
+        thaneLines.draw(mvpMatrix);
     }
 }

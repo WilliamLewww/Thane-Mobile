@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     TSurface tSurface;
 
     float initialY, initialX;
+    int sensitivity = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,32 +40,66 @@ public class MainActivity extends AppCompatActivity {
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             if (action_state < 0) {
-                if (initialY - event.getY() > 50) {
-                    if (event.getX() - initialX > 50) {
-                        action_state = -3;
-                    }else {
-                        if (initialX - event.getX() > 50) {
-                            action_state = -2;
-                        }
-                        else {
-                            action_state = -4;
-                        }
-                    }
+                if (initialY - event.getY() > sensitivity) {
+                    action_state = -4;
+                    initialY = event.getY();
+                }
+
+                if (event.getY() - initialY > sensitivity) {
+                    action_state = -1;
+                    initialY = event.getY();
+                }
+
+                if (event.getX() - initialX > sensitivity && action_state != -2) {
+                    action_state = -3;
+                    initialX = event.getX();
+                }
+
+                if (initialX - event.getX() > sensitivity && action_state != -3) {
+                    action_state = -2;
+                    initialX = event.getX();
+                }
+
+                if (action_state == -3 && initialX - event.getX() > sensitivity) {
+                    action_state = -1;
+                    initialX = event.getX();
+                }
+
+                if (action_state == -2 && event.getX() - initialX > sensitivity) {
+                    action_state = -1;
+                    initialX = event.getX();
                 }
             }
 
             if (action_state > 0) {
-                if (event.getY() - initialY > 50) {
-                    if (event.getX() - initialX > 50) {
-                        action_state = 3;
-                    }else {
-                        if (initialX - event.getX() > 50) {
-                            action_state = 2;
-                        }
-                        else {
-                            action_state = 4;
-                        }
-                    }
+                if (event.getY() - initialY > sensitivity) {
+                    action_state = 4;
+                    initialY = event.getY();
+                }
+
+                if (initialY - event.getY() > sensitivity) {
+                    action_state = 1;
+                    initialY = event.getY();
+                }
+
+                if (event.getX() - initialX > sensitivity && action_state != 2) {
+                    action_state = 3;
+                    initialX = event.getX();
+                }
+
+                if (initialX - event.getX() > sensitivity && action_state != 3) {
+                    action_state = 2;
+                    initialX = event.getX();
+                }
+
+                if (action_state == 3 && initialX - event.getX() > sensitivity) {
+                    action_state = 1;
+                    initialX = event.getX();
+                }
+
+                if (action_state == 2 && event.getX() - initialX > sensitivity) {
+                    action_state = 1;
+                    initialX = event.getX();
                 }
             }
         }
