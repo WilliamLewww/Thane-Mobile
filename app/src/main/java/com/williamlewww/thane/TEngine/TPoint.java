@@ -24,7 +24,7 @@ public class TPoint {
     static final int COORDS_PER_VERTEX = 3;
     int VertexCount;
     int VertexStride;
-    List<Float> lineCoords;
+    public List<Float> lineCoords;
 
     float color[] = { 0.94f, 0.85f, 0.85f, 1.0f };
 

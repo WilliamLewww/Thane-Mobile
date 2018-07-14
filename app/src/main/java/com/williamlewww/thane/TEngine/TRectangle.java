@@ -8,6 +8,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class TRectangle {
 
@@ -56,6 +59,14 @@ public class TRectangle {
     public PointF getBottomRight() {
         return new PointF((float)((width / 2) * Math.cos((-angle * Math.PI) / 180) - (-height / 2) * Math.sin((-angle * Math.PI) / 180) + position.x),
                 (float)((-width / 2) * Math.sin((-angle * Math.PI) / 180) - (-height / 2) * Math.cos((-angle * Math.PI) / 180) + position.y));
+    }
+
+    public PointF getAxisA() {
+        return new PointF(getTopRight().x - getTopLeft().x, getTopRight().y - getTopLeft().y);
+    }
+
+    public PointF getAxisB() {
+        return new PointF(getTopRight().x - getBottomRight().x, getTopRight().y - getBottomRight().y);
     }
 
     public TRectangle(PointF position, int width, int height, boolean rotation) {
@@ -125,5 +136,60 @@ public class TRectangle {
 
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount);
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+    }
+
+    public boolean checkCollision(PointF[] line) {
+        List<Double> productsA;
+        List<Double> productsB;
+
+        productsA = getProducts(this, getAxisA());
+        productsB = getProducts(line, getAxisA());
+        if (productsB.get(0) > productsA.get(1) || productsB.get(1) < productsA.get(0)) return false;
+
+        productsA = getProducts(this, getAxisB());
+        productsB = getProducts(line, getAxisB());
+        if (productsB.get(0) > productsA.get(1) || productsB.get(1) < productsA.get(0)) return false;
+
+        PointF opposite = new PointF(line[1].y - line[0].y, line[0].x - line[1].x);
+        productsA = getProducts(this, opposite);
+        productsB = getProducts(line, opposite);
+        if (productsB.get(0) > productsA.get(1) || productsB.get(1) < productsA.get(0)) return false;
+
+        return true;
+    }
+
+    List<Double> getProducts(PointF[] line, PointF axis) {
+        List<Double> products = new ArrayList<>();
+        List<Double> minMax = new ArrayList<>();
+
+        products.add(dotProduct(project(axis, line[0]), axis));
+        products.add(dotProduct(project(axis, line[1]), axis));
+
+        minMax.add(Collections.min(products));
+        minMax.add(Collections.max(products));
+        return minMax;
+    }
+
+    List<Double> getProducts(TRectangle rectangle, PointF axis) {
+        List<Double> products = new ArrayList<>();
+        List<Double> minMax = new ArrayList<>();
+
+        products.add(dotProduct(project(axis, rectangle.getTopRight()), axis));
+        products.add(dotProduct(project(axis, rectangle.getTopLeft()), axis));
+        products.add(dotProduct(project(axis, rectangle.getBottomRight()), axis));
+        products.add(dotProduct(project(axis, rectangle.getBottomLeft()), axis));
+
+        minMax.add(Collections.min(products));
+        minMax.add(Collections.max(products));
+        return minMax;
+    }
+
+    PointF project(PointF axisArgs, PointF vertex) {
+        return new PointF((float)(((vertex.x * axisArgs.x) + (vertex.y * axisArgs.y)) / (Math.pow(axisArgs.x, 2) + Math.pow(axisArgs.y, 2))) * axisArgs.x,
+                (float)(((vertex.x * axisArgs.x) + (vertex.y * axisArgs.y)) / (Math.pow(axisArgs.x, 2) + Math.pow(axisArgs.y, 2))) * axisArgs.y);
+    }
+
+    double dotProduct(PointF projection, PointF axis) {
+        return (projection.x * axis.x) + (projection.y * axis.y);
     }
 }

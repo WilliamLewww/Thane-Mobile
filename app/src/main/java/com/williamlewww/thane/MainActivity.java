@@ -1,10 +1,8 @@
 package com.williamlewww.thane;
 
-import android.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import com.williamlewww.thane.TEngine.TSurface;
@@ -16,7 +14,7 @@ public class MainActivity extends AppCompatActivity {
     TSurface tSurface;
 
     float initialY, initialX;
-    int sensitivity = 100;
+    int sensitivityY = 100, sensitivityX = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,71 +38,71 @@ public class MainActivity extends AppCompatActivity {
 
         if (event.getAction() == MotionEvent.ACTION_MOVE) {
             if (action_state < 0) {
-                if (initialY - event.getY() > sensitivity) {
+                if (initialY - event.getY() > sensitivityY) {
                     action_state = -4;
                     initialY = event.getY();
                 }
 
-                if (event.getY() - initialY > sensitivity) {
+                if (event.getY() - initialY > sensitivityY) {
                     action_state = -1;
                     initialY = event.getY();
                 }
 
-                if (event.getX() - initialX > sensitivity && action_state != -2) {
+                if (event.getX() - initialX > sensitivityX && action_state != -2) {
                     action_state = -3;
                     initialX = event.getX();
                 }
 
-                if (initialX - event.getX() > sensitivity && action_state != -3) {
+                if (initialX - event.getX() > sensitivityX && action_state != -3) {
                     action_state = -2;
                     initialX = event.getX();
                 }
 
-                if (action_state == -3 && initialX - event.getX() > sensitivity) {
+                if (action_state == -3 && initialX - event.getX() > sensitivityX) {
                     action_state = -1;
                     initialX = event.getX();
                 }
 
-                if (action_state == -2 && event.getX() - initialX > sensitivity) {
+                if (action_state == -2 && event.getX() - initialX > sensitivityX) {
                     action_state = -1;
                     initialX = event.getX();
                 }
             }
 
             if (action_state > 0) {
-                if (event.getY() - initialY > sensitivity) {
+                if (event.getY() - initialY > sensitivityY) {
                     action_state = 4;
                     initialY = event.getY();
                 }
 
-                if (initialY - event.getY() > sensitivity) {
+                if (initialY - event.getY() > sensitivityY) {
                     action_state = 1;
                     initialY = event.getY();
                 }
 
-                if (event.getX() - initialX > sensitivity && action_state != 2) {
+                if (event.getX() - initialX > sensitivityX && action_state != 2) {
                     action_state = 3;
                     initialX = event.getX();
                 }
 
-                if (initialX - event.getX() > sensitivity && action_state != 3) {
+                if (initialX - event.getX() > sensitivityX && action_state != 3) {
                     action_state = 2;
                     initialX = event.getX();
                 }
 
-                if (action_state == 3 && initialX - event.getX() > sensitivity) {
+                if (action_state == 3 && initialX - event.getX() > sensitivityX) {
                     action_state = 1;
                     initialX = event.getX();
                 }
 
-                if (action_state == 2 && event.getX() - initialX > sensitivity) {
+                if (action_state == 2 && event.getX() - initialX > sensitivityX) {
                     action_state = 1;
                     initialX = event.getX();
                 }
             }
         }
 
-        if (event.getAction() == MotionEvent.ACTION_UP) { action_state = 0; }
+        if (event.getAction() == MotionEvent.ACTION_UP || event.getPointerCount() > 1) { action_state = 0; }
 
         return super.onTouchEvent(event);
     }

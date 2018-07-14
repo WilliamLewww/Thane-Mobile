@@ -1,5 +1,6 @@
 package com.williamlewww.thane.TEngine;
 
+import android.graphics.PointF;
 import android.opengl.GLES20;
 
 import java.nio.ByteBuffer;
@@ -23,9 +24,17 @@ public class TLine {
     static final int COORDS_PER_VERTEX = 3;
     int VertexCount;
     int VertexStride;
-    List<Float> lineCoords;
+    public List<Float> lineCoords;
 
     float color[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+
+    public PointF getPointReverse(int index) {
+        return new PointF(-lineCoords.get(index * 3), -lineCoords.get((index * 3) + 1));
+    }
+
+    public PointF getPoint(int index) {
+        return new PointF(lineCoords.get(index * 3), lineCoords.get((index * 3) + 1));
+    }
 
     public TLine() {
         lineCoords = new ArrayList<>();

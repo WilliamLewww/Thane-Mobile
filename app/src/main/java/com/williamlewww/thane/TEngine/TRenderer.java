@@ -7,14 +7,14 @@ import android.opengl.Matrix;
 import android.os.Trace;
 
 import com.williamlewww.thane.TMain.Board;
+import com.williamlewww.thane.TMain.Joiner;
 import com.williamlewww.thane.TMain.Track;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class TRenderer implements GLSurfaceView.Renderer {
-    Board board;
-    Track track;
+    Joiner joiner = new Joiner();
 
     private final float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
@@ -35,11 +35,9 @@ public class TRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
-        board = new Board();
-        track = new Track();
-        track.initialize();
+        joiner.initialize();
 
-        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        GLES20.glClearColor(0.11f, 0.42f, 0.63f, 1.0f);
     }
 
     @Override
@@ -63,18 +61,17 @@ public class TRenderer implements GLSurfaceView.Renderer {
     }
 
     private void update() {
-        float deltaTimeS = (float)deltaTime / 100000000;
-        board.update(deltaTimeS);
+        //float deltaTimeS = (float)deltaTime / 100000000;
+        joiner.update();
     }
 
     private void render() {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
         Matrix.setLookAtM(mViewMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-        Matrix.translateM(mViewMatrix, 0, board.rectangle.position.x, board.rectangle.position.y, 0);
+        Matrix.translateM(mViewMatrix, 0, Board.rectangle.position.x, Board.rectangle.position.y, 0);
         Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-        board.draw(mMVPMatrix);
-        track.draw(mMVPMatrix);
+        joiner.draw(mMVPMatrix);
     }
 }

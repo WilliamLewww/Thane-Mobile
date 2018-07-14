@@ -7,33 +7,31 @@ import com.williamlewww.thane.TEngine.TPoint;
 import com.williamlewww.thane.TEngine.TRectangle;
 
 public class Board {
-    public TRectangle rectangle;
+    public static TRectangle rectangle;
 
     TPoint thaneLines;
 
     float velocity;
     float rollSpeed = 0.02f;
 
-    double pushInterval = 0.7, pushSpeed = 35, pushTimer = 0, pushMax = 150;
-    double tuckSpeed = 8;
+//    double pushInterval = 0.7, pushSpeed = 35, pushTimer = 0, pushMax = 150;
+//    double tuckSpeed = 8;
     double turnSpeed = 1.12;
 
-    boolean slide = false, shutdownSlide = false;
-    boolean turnLeft = false, turnRight = false;
+    boolean slide, shutdownSlide;
+    boolean turnLeft, turnRight;
 
-    double movementAngle = 0;
-    boolean flipped = false;
+    double movementAngle;
+    boolean flipped;
 
     public Board() {
-        rectangle = new TRectangle(new PointF(0,0),100,50, true);
-        rectangle.angle = 270;
-        movementAngle = 270;
+        reset();
 
         thaneLines = new TPoint();
         thaneLines.initialize();
     }
 
-    public void update(float deltaTimeS) {
+    public void update() {
         velocity += rollSpeed;
 
         handleLeftTurn();
@@ -56,20 +54,14 @@ public class Board {
                 slide = true;
 
                 rectangle.angle -= turnSpeed * 3;
-                movementAngle -= turnSpeed * 0.75;
+                movementAngle -= turnSpeed * 0.65;
             }
             else {
                 if (MainActivity.action_state == 2) {
                     slide = true;
 
-                    if (shutdownSlide == true) {
-                        rectangle.angle -= turnSpeed * 5;
-                        movementAngle -= turnSpeed * 0.25;
-                    }
-                    else {
-                        rectangle.angle -= turnSpeed * 6;
-                        movementAngle -= turnSpeed * 0.25;
-                    }
+                    rectangle.angle -= turnSpeed * 5;
+                    movementAngle -= turnSpeed * 0.35;
                 }
                 else {
                     if (MainActivity.action_state == 4) {
@@ -100,20 +92,14 @@ public class Board {
                 slide = true;
 
                 rectangle.angle += turnSpeed * 3;
-                movementAngle += turnSpeed * 0.75;
+                movementAngle += turnSpeed * 0.65;
             }
             else {
                 if (MainActivity.action_state == -2) {
                     slide = true;
 
-                    if (shutdownSlide == true) {
-                        rectangle.angle += turnSpeed * 5;
-                        movementAngle += turnSpeed * 0.25;
-                    }
-                    else {
-                        rectangle.angle += turnSpeed * 6;
-                        movementAngle += turnSpeed * 0.25;
-                    }
+                    rectangle.angle += turnSpeed * 5;
+                    movementAngle += turnSpeed * 0.35;
                 }
                 else {
                     if (MainActivity.action_state == -4) {
@@ -136,8 +122,8 @@ public class Board {
     }
 
     private double getAngleDifference() {
-        if (shutdownSlide) { return Math.abs(rectangle.angle - movementAngle) * 1.5; }
-        else { return Math.abs(rectangle.angle - movementAngle) * 0.5; }
+        if (shutdownSlide) { return Math.abs(rectangle.angle - movementAngle) * 1.0; }
+        else { return Math.abs(rectangle.angle - movementAngle) * 0.75; }
     }
 
     private void handleSlideLeft(double difference) {
@@ -233,7 +219,30 @@ public class Board {
     }
 
     public void draw(float[] mvpMatrix) {
-        rectangle.draw(mvpMatrix);
         thaneLines.draw(mvpMatrix);
+        rectangle.draw(mvpMatrix);
+    }
+
+    public boolean handleCollision(PointF pointA, PointF pointB) {
+        PointF[] tempPoint = { pointA, pointB };
+        if (rectangle.checkCollision(tempPoint) == true) {
+            reset();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void reset() {
+        rectangle = new TRectangle(new PointF(0,0),100,50, true);
+        rectangle.angle = 270;
+        movementAngle = 270;
+
+        flipped = false;
+        slide = false;
+        shutdownSlide = false;
+        turnLeft = false;
+        turnRight = false;
+        velocity = 0.0f;
     }
 }
