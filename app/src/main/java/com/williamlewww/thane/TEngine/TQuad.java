@@ -40,6 +40,12 @@ public class TQuad {
         color[2] = b;
     }
 
+    public void addColor(float r, float g, float b) {
+        color[0] += r;
+        color[1] += g;
+        color[2] += b;
+    }
+
     public TQuad(PointF[] points) {
         for (int x = 0; x < 4; x++) {
             rectangleCoords[(x * 3)] = points[x].x;
@@ -75,7 +81,7 @@ public class TQuad {
 
     float[] matrix = new float[16];
 
-    public void draw(float[] mvpMatrix) {
+    public void draw(float[] mvpMatrix, boolean fan) {
         GLES20.glUseProgram(mProgram);
         matrix = mvpMatrix.clone();
 
@@ -89,7 +95,9 @@ public class TQuad {
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, matrix, 0);
 
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, vertexCount);
+        if (fan) { GLES20.glDrawArrays(GLES20.GL_TRIANGLE_FAN, 0, vertexCount); }
+        else { GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, vertexCount); }
+
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 }

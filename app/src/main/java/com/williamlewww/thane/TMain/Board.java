@@ -14,8 +14,6 @@ public class Board {
     float velocity;
     float rollSpeed = 0.02f;
 
-//    double pushInterval = 0.7, pushSpeed = 35, pushTimer = 0, pushMax = 150;
-//    double tuckSpeed = 8;
     double turnSpeed = 1.12;
 
     boolean slide, shutdownSlide;
@@ -32,7 +30,7 @@ public class Board {
     }
 
     public void update() {
-        velocity += rollSpeed;
+        addSpeedFromHill();
 
         handleLeftTurn();
         handleRightTurn();
@@ -43,6 +41,15 @@ public class Board {
 
         moveInDirection(getDirection());
         refreshSlide();
+    }
+
+    int speedZoneIndex = 0;
+    private void addSpeedFromHill() {
+        while (rectangle.position.y > Track.speedZones.get(speedZoneIndex).x) {
+            speedZoneIndex += 1;
+        }
+
+        velocity += rollSpeed + (rollSpeed * 2 * (Track.speedZones.get(speedZoneIndex).y / 100));
     }
 
     private void handleLeftTurn() {
@@ -132,7 +139,7 @@ public class Board {
                 if (turnRight == true) {
                     rectangle.angle += 1;
                 }
-                rectangle.angle += 2;
+                rectangle.angle += 3;
             }
 
             if (movementAngle - rectangle.angle > 5) {
@@ -165,7 +172,7 @@ public class Board {
                 if (turnLeft == true) {
                     rectangle.angle -= 1;
                 }
-                rectangle.angle -= 2;
+                rectangle.angle -= 3;
             }
             if (rectangle.angle - movementAngle > 5) {
                 if (velocity - (difference / 500) < 0) {

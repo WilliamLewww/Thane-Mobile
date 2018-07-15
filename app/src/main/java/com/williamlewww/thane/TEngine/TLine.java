@@ -28,6 +28,12 @@ public class TLine {
 
     float color[] = { 0.0f, 0.0f, 1.0f, 1.0f };
 
+    public void setColor(float r, float g, float b) {
+        color[0] = r;
+        color[1] = g;
+        color[2] = b;
+    }
+
     public PointF getPointReverse(int index) {
         return new PointF(-lineCoords.get(index * 3), -lineCoords.get((index * 3) + 1));
     }
@@ -73,6 +79,27 @@ public class TLine {
     }
 
     public void draw(float[] mvpMatrix) {
+        GLES20.glUseProgram(GlProgram);
+
+        PositionHandle = GLES20.glGetAttribLocation(GlProgram, "vPosition");
+
+        GLES20.glEnableVertexAttribArray(PositionHandle);
+        GLES20.glVertexAttribPointer(PositionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, VertexStride, VertexBuffer);
+
+        ColorHandle = GLES20.glGetUniformLocation(GlProgram, "vColor");
+
+        GLES20.glUniform4fv(ColorHandle, 1, color, 0);
+
+        MVPMatrixHandle = GLES20.glGetUniformLocation(GlProgram, "uMVPMatrix");
+
+        GLES20.glUniformMatrix4fv(MVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+        GLES20.glDrawArrays(GLES20.GL_LINES, 0, VertexCount);
+
+        GLES20.glDisableVertexAttribArray(PositionHandle);
+    }
+
+    public void drawStrip(float[] mvpMatrix) {
         GLES20.glUseProgram(GlProgram);
 
         PositionHandle = GLES20.glGetAttribLocation(GlProgram, "vPosition");
