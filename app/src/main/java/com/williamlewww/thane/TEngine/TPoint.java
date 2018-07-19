@@ -32,6 +32,20 @@ public class TPoint {
         lineCoords = new ArrayList<>();
     }
 
+    public TPoint(PointF position, float[] color) {
+        lineCoords = new ArrayList<>();
+        lineCoords.add(-position.x);
+        lineCoords.add(-position.y);
+        lineCoords.add(0.0f);
+
+        this.color[0] = color[0];
+        this.color[1] = color[1];
+        this.color[2] = color[2];
+        this.color[3] = color[3];
+
+        initialize();
+    }
+
     public void addPoint(float x, float y) {
         lineCoords.add(-x);
         lineCoords.add(-y);

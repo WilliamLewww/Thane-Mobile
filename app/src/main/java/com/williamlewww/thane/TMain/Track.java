@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class Track {
     public static List<PointF> speedZones = new ArrayList<>();
-    int speedZoneInterval = 3;
+    int speedZoneInterval = 1;
 
     public TLine segmentedLine, complementaryLine;
 
@@ -40,7 +40,7 @@ public class Track {
 
     public void initialize() {
         generateTrack();
-        generateSpeedZone(speedZoneInterval);
+        generateSpeedZone(speedZoneInterval, 10, 1);
         segmentedLine.initialize();
         complementaryLine.initialize();
         startLine.initialize();
@@ -60,7 +60,7 @@ public class Track {
             roadQuads.add(new TQuad(pointList));
             if ( x < segmentedLine.lineCoords.size() / (3 * speedZoneInterval)) {
                 float color = ((speedZones.get(x / speedZoneInterval).y / 10.0f) - 0.5f) / 15.0f;
-                roadQuads.get(roadQuads.size() - 1).addColor(color, color, color);
+                roadQuads.get(roadQuads.size() - 1).addColor(-color, -color, -color);
             }
         }
 
@@ -113,15 +113,26 @@ public class Track {
         }
     }
 
-    private void generateSpeedZone(int interval) {
-        for (int x = 0; x < segmentedLine.lineCoords.size() / 3; x += (3 * interval)) {
-            float speed = generateSpeed(10, 1);
+    private void generateSpeedZone(int interval, int max, int min) {
+        float speed = min;
+        for (int x = 0; x < segmentedLine.lineCoords.size() / 3; x += interval) {
+            if (x > 0) {
+                speed = generateSpeed(max, min, speedZones.get(speedZones.size() - 1).y);
+            }
             speedZones.add(new PointF(segmentedLine.lineCoords.get(x + 1), speed));
         }
     }
 
-    private float generateSpeed(int max, int min) {
-        return random.nextFloat() * (max - min) + min;
+    private float generateSpeed(int max, int min, float previous) {
+        float nextStep = random.nextFloat() * (1 + 1) - 1;
+        if (previous + nextStep > max) {
+            return max;
+        }
+        if (previous + nextStep < min) {
+            return min;
+        }
+
+        return previous + nextStep;
     }
 
     public void draw(float[] mvpMatrix) {

@@ -198,7 +198,7 @@ public class Board {
         }
     }
 
-    private void generateThane(int alpha) {
+    private void generateThane(int velocity) {
         thaneLines.addPoint(rectangle.getTopLeft());
         thaneLines.addPoint(rectangle.getTopRight());
         thaneLines.addPoint(rectangle.getBottomRight());
