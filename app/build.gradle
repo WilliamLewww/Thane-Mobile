@@ -6,8 +6,8 @@ android {
         applicationId "com.williamlewww.thane"
         minSdkVersion 15
         targetSdkVersion 28
-        versionCode 6
-        versionName "2.3"
+        versionCode 9
+        versionName "2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -16,6 +16,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res/raw'] } }
 }
 
 dependencies {

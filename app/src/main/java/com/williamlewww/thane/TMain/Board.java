@@ -56,31 +56,31 @@ public class Board {
         if (MainActivity.action_state > 0) {
             turnLeft = true;
 
+            if (MainActivity.action_state == 1) {
+                rectangle.angle -= turnSpeed * 0.75;
+                movementAngle -= turnSpeed * 0.75;
+            }
+
             if (MainActivity.action_state == 3) {
                 shutdownSlide = true;
                 slide = true;
 
                 rectangle.angle -= turnSpeed * 3;
-                movementAngle -= turnSpeed * 0.65;
+                movementAngle -= turnSpeed * 0.50;
             }
             else {
                 if (MainActivity.action_state == 2) {
                     slide = true;
 
-                    rectangle.angle -= turnSpeed * 5;
-                    movementAngle -= turnSpeed * 0.35;
+                    rectangle.angle -= turnSpeed * 4;
+                    movementAngle -= turnSpeed * 0.42;
                 }
                 else {
                     if (MainActivity.action_state == 4) {
                         slide = true;
 
                         rectangle.angle -= turnSpeed * 3;
-                        movementAngle -= turnSpeed * 1.25;
-                    }
-                    else {
-
-                        rectangle.angle -= turnSpeed;
-                        movementAngle -= turnSpeed;
+                        movementAngle -= turnSpeed * 0.85;
                     }
                 }
             }
@@ -94,31 +94,31 @@ public class Board {
         if (MainActivity.action_state < 0) {
             turnRight = true;
 
+            if (MainActivity.action_state == -1) {
+                rectangle.angle += turnSpeed * 0.75;
+                movementAngle += turnSpeed * 0.75;
+            }
+
             if (MainActivity.action_state == -3) {
                 shutdownSlide = true;
                 slide = true;
 
                 rectangle.angle += turnSpeed * 3;
-                movementAngle += turnSpeed * 0.65;
+                movementAngle += turnSpeed * 0.50;
             }
             else {
                 if (MainActivity.action_state == -2) {
                     slide = true;
 
-                    rectangle.angle += turnSpeed * 5;
-                    movementAngle += turnSpeed * 0.35;
+                    rectangle.angle += turnSpeed * 4;
+                    movementAngle += turnSpeed * 0.42;
                 }
                 else {
                     if (MainActivity.action_state == -4) {
                         slide = true;
 
                         rectangle.angle += turnSpeed * 3;
-                        movementAngle += turnSpeed * 1.25;
-                    }
-                    else {
-
-                        rectangle.angle += turnSpeed;
-                        movementAngle += turnSpeed;
+                        movementAngle += turnSpeed * 0.85;
                     }
                 }
             }
@@ -157,7 +157,9 @@ public class Board {
                 shutdownSlide = false;
             }
 
-            rectangle.angle += 1.0;
+            if (slide == true) {
+                rectangle.angle += 1.0;
+            }
 
             if (movementAngle - rectangle.angle > 90) {
                 movementAngle -= 180;
@@ -174,6 +176,7 @@ public class Board {
                 }
                 rectangle.angle -= 3;
             }
+
             if (rectangle.angle - movementAngle > 5) {
                 if (velocity - (difference / 500) < 0) {
                     velocity = 0;
@@ -189,7 +192,9 @@ public class Board {
                 shutdownSlide = false;
             }
 
-            rectangle.angle -= 1.0;
+            if (slide == true) {
+                rectangle.angle -= 1.0;
+            }
 
             if (rectangle.angle - movementAngle > 90) {
                 movementAngle += 180;

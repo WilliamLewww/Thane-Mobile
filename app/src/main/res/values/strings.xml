@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Thane</string>
+
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="start">Complete</string>
+
+    <string name="slide_1_title">Welcome to Thane!</string>
+    <string name="slide_1_desc">A game based on downhill longboarding</string>
+
+    <string name="slide_2_title">Turn</string>
+    <string name="slide_2_desc">Press the left or right side of the screen to turn respectively</string>
+
+    <string name="slide_3_title">Cornering Slide</string>
+    <string name="slide_3_desc">While turning, slide your finger away from the center of the screen</string>
+
+    <string name="slide_4_title">Shutdown Slide</string>
+    <string name="slide_4_desc">While turning, slide your finger down</string>
+
+    <string name="slide_5_title">Technical Slide</string>
+    <string name="slide_5_desc">While turning, slide your finger up</string>
 </resources>
