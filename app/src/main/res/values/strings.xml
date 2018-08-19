@@ -10,14 +10,14 @@
     <string name="slide_1_desc">A game based on downhill longboarding</string>
 
     <string name="slide_2_title">Turn</string>
-    <string name="slide_2_desc">Press the left or right side of the screen to turn respectively</string>
+    <string name="slide_2_desc"></string>
 
     <string name="slide_3_title">Cornering Slide</string>
-    <string name="slide_3_desc">While turning, slide your finger away from the center of the screen</string>
+    <string name="slide_3_desc">Useful when trying to "drift" around a corner</string>
 
     <string name="slide_4_title">Shutdown Slide</string>
-    <string name="slide_4_desc">While turning, slide your finger down</string>
+    <string name="slide_4_desc">Best way to slow down on a steep decline</string>
 
     <string name="slide_5_title">Technical Slide</string>
-    <string name="slide_5_desc">While turning, slide your finger up</string>
+    <string name="slide_5_desc">Add flair to the run</string>
 </resources>
